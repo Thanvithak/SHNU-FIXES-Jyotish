@@ -1,0 +1,60 @@
+<sqlscript>
+  <statement>
+     <mdx_select>
+        <axis_clause>
+             <segment>
+                  <name_segment>[]
+             </segment>
+	     <segment>
+	          <name_segment>[]
+	     </segment>
+	 <on_axis>
+	    <string_value>columns</>
+	 </on_axis>
+      </axis_clause>
+      <axis_clause>
+	 <mdx_function>
+            <function_name>
+                 <segment>
+                  <name_segment>Hierarchize
+             </segment>
+             </function_name>
+             <function_name>
+                 <segment>
+                  <name_segment>drilldown
+             </segment>
+             </function_name>
+              <function_name>
+                 <segment>
+                  <name_segment>crossjoin
+             </segment>
+             </function_name>
+          <function_args>
+            <mdx_identifier>
+                <segment>
+                       <name_segment quoting="QUOTED" value="[Student]"/>
+                </segment>
+                <segment>
+                       <name_segment>
+                <segment>
+                       <name_segment>
+	        </segment>
+            </mdx_identifier>
+            <mdx_identifier>
+            <mdx_identifier>
+       </mdx_function>
+       <on_axis>
+            <string_value>ROWS</string_value>
+        </on_axis>
+      </axis_clause>
+      <cube_clause>
+           <cube_name>[Academics Model]</cube_name>
+      </cube_clause>
+     <where_clause>
+     </where_clause>
+   </mdx_select>
+ </statement>
+</sqlscript>
+
+                	
+ 	
