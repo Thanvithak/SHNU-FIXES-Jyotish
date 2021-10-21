@@ -1,0 +1,101 @@
+{
+    "name": "TEST_NEW",
+    "properties": {
+        "folder": {
+            "name": "SampleDataFlow"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "COD",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TBYDWHTLIBSTCCOD"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "COD",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TBYDWHTLIBSTCCOD3"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UNV",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TBYDWHTFIODRVPRDUNV"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UNV",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TBYDWHTFIODRVPRDUNV1"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "Target",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TBYDMADFIOCFMPRD"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FilterCombinedTOCUNI"
+                },
+                {
+                    "name": "DerivedColumnLUNVNDL"
+                },
+                {
+                    "name": "FilterCombinedTCPROD"
+                },
+                {
+                    "name": "DerivedColumnLPRDNDL"
+                },
+                {
+                    "name": "Aggregate"
+                },
+                {
+                    "name": "Join"
+                },
+                {
+                    "name": "UserWritten1"
+                },
+                {
+                    "name": "Join1"
+                },
+                {
+                    "name": "Select1"
+                },
+                {
+                    "name": "UserWritten2"
+                },
+                {
+                    "name": "Join2"
+                },
+                {
+                    "name": "Filter"
+                },
+                {
+                    "name": "Select2"
+                },
+                {
+                    "name": "Select3"
+                },
+                {
+                    "name": "DerivedColumn1"
+                },
+                {
+                    "name": "SurrogateKey1"
+                }
+            ],
+            "script": "parameters{\n\tetls_begdate as timestamp (currentTimestamp()),\n\tetls_enddate as timestamp (toTimestamp('9999-12-31 23:59:59','yyyy-MM-dd HH:mm:ss')),\n\taidn as long (1290066)\n}\nsource(output(\n\t\tLSTCCOD as string,\n\t\tLVLRCOD as string,\n\t\tCLANLIB as string,\n\t\tLLIB005 as string,\n\t\tLLIB012 as string,\n\t\tLLIB025 as string,\n\t\tLLIB065 as string,\n\t\tLLIBDSC as string,\n\t\tDNUMLOT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tAIDNAUD as long,\n\t\tDDEBSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tDFINSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tBSITCOU as integer,\n\t\tSIDNLIBSTCCOD as long\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> TBYDWHTLIBSTCCOD\nsource(output(\n\t\tLSTCCOD as string,\n\t\tLVLRCOD as string,\n\t\tCLANLIB as string,\n\t\tLLIB005 as string,\n\t\tLLIB012 as string,\n\t\tLLIB025 as string,\n\t\tLLIB065 as string,\n\t\tLLIBDSC as string,\n\t\tDNUMLOT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tAIDNAUD as long,\n\t\tDDEBSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tDFINSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tBSITCOU as integer,\n\t\tSIDNLIBSTCCOD as long\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> TBYDWHTLIBSTCCOD3\nsource(output(\n\t\tCPRD as string,\n\t\tCUNV as string,\n\t\tBPAC as short,\n\t\tDNUMLOT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tAIDNAUD as long,\n\t\tDDEBSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tDFINSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tBSITCOU as integer,\n\t\tSIDNFIODRVPRDUNV as long\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> TBYDWHTFIODRVPRDUNV\nsource(output(\n\t\tCPRD as string,\n\t\tCUNV as string,\n\t\tBPAC as short,\n\t\tDNUMLOT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tAIDNAUD as long,\n\t\tDDEBSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tDFINSIT as timestamp 'ddMMMyyyy:HH:mm:ss',\n\t\tBSITCOU as integer,\n\t\tSIDNFIODRVPRDUNV as long\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> TBYDWHTFIODRVPRDUNV1\nTBYDWHTLIBSTCCOD filter(LSTCCOD == 'TOCUNI' && BSITCOU==1 && (like(CLANLIB, '1%')||like(CLANLIB, '2%')||like(CLANLIB, 'F%'))) ~> FilterCombinedTOCUNI\nFilterCombinedTOCUNI derive(CUNV = LVLRCOD,\n\t\tLUNVNDL = LLIB065,\n\t\tLUNVANG = LLIB065,\n\t\tLUNVFRA = LLIB065) ~> DerivedColumnLUNVNDL\nTBYDWHTLIBSTCCOD3 filter(LSTCCOD == 'TCPROD' && BSITCOU==1 && (like(CLANLIB, '1%')||like(CLANLIB, '2%')||like(CLANLIB, 'F%'))) ~> FilterCombinedTCPROD\nFilterCombinedTCPROD derive(CPRD = LVLRCOD,\n\t\tLPRDNDL = LLIB065,\n\t\tLPRDFRA = LLIB065,\n\t\tLPRDANG = LLIB065) ~> DerivedColumnLPRDNDL\nFilter aggregate(groupBy(CPRD,\n\t\tCUNV),\n\tDNUMLOT = max(DNUMLOT)) ~> Aggregate\nAggregate, TBYDWHTFIODRVPRDUNV1 join(Aggregate@CPRD == TBYDWHTFIODRVPRDUNV1@CPRD\n\t&& Aggregate@CUNV == TBYDWHTFIODRVPRDUNV1@CUNV,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join\nDerivedColumnLPRDNDL select(mapColumn(\n\t\tLSTCCOD,\n\t\tLVLRCOD,\n\t\tCLANLIB,\n\t\tLLIB005,\n\t\tLLIB012,\n\t\tLLIB025,\n\t\tLLIB065,\n\t\tLLIBDSC,\n\t\tDNUMLOT,\n\t\tAIDNAUD,\n\t\tDDEBSIT,\n\t\tDFINSIT,\n\t\tBSITCOU,\n\t\tSIDNLIBSTCCOD,\n\t\tCPRD,\n\t\tLPRDNDL,\n\t\tLPRDFRA,\n\t\tLPRDANG\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> UserWritten1\nDerivedColumn1, UserWritten1 join(Select1@CPRD == UserWritten1@CPRD,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join1\nJoin select(mapColumn(\n\t\tCPRD = Aggregate@CPRD,\n\t\tCUNV = Aggregate@CUNV,\n\t\tCPRD = TBYDWHTFIODRVPRDUNV1@CPRD,\n\t\tCUNV = TBYDWHTFIODRVPRDUNV1@CUNV,\n\t\tBPAC,\n\t\tDNUMLOT = TBYDWHTFIODRVPRDUNV1@DNUMLOT,\n\t\tAIDNAUD = TBYDWHTFIODRVPRDUNV1@AIDNAUD,\n\t\tDDEBSIT,\n\t\tDFINSIT,\n\t\tBSITCOU,\n\t\tSIDNFIODRVPRDUNV\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nDerivedColumnLUNVNDL select(mapColumn(\n\t\tLSTCCOD,\n\t\tLVLRCOD,\n\t\tCLANLIB,\n\t\tLLIB005,\n\t\tLLIB012,\n\t\tLLIB025,\n\t\tLLIB065,\n\t\tLLIBDSC,\n\t\tDNUMLOT,\n\t\tAIDNAUD,\n\t\tDDEBSIT,\n\t\tDFINSIT,\n\t\tBSITCOU,\n\t\tSIDNLIBSTCCOD,\n\t\tCUNV,\n\t\tLUNVNDL,\n\t\tLUNVANG,\n\t\tLUNVFRA\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> UserWritten2\nSelect3, UserWritten2 join(Select3@CUNV == UserWritten2@CUNV,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join2\nTBYDWHTFIODRVPRDUNV filter(BSITCOU == 1) ~> Filter\nJoin2 select(mapColumn(\n\t\tCPRD,\n\t\tCUNV = Select3@CUNV,\n\t\tBPAC,\n\t\tDNUMLOT = Select3@DNUMLOT,\n\t\tAIDNAUD = Select3@AIDNAUD,\n\t\tDDEBSIT = Select3@DDEBSIT,\n\t\tDFINSIT = Select3@DFINSIT,\n\t\tBSITCOU = Select3@BSITCOU,\n\t\tSIDNFIOCFMPRD,\n\t\tLPRDNDL,\n\t\tLPRDFRA,\n\t\tLPRDANG,\n\t\tLUNVNDL,\n\t\tLUNVANG,\n\t\tLUNVFRA\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nJoin1 select(mapColumn(\n\t\tCPRD = Select1@CPRD,\n\t\tCUNV,\n\t\tBPAC,\n\t\tDNUMLOT = Select1@DNUMLOT,\n\t\tAIDNAUD = DerivedColumn1@AIDNAUD,\n\t\tDDEBSIT = Select1@DDEBSIT,\n\t\tDFINSIT = Select1@DFINSIT,\n\t\tBSITCOU = Select1@BSITCOU,\n\t\tSIDNFIODRVPRDUNV,\n\t\t{_SIDN},\n\t\tSIDNFIOCFMPRD,\n\t\tLSTCCOD,\n\t\tLVLRCOD,\n\t\tCLANLIB,\n\t\tLLIB005,\n\t\tLLIB012,\n\t\tLLIB025,\n\t\tLLIB065,\n\t\tLLIBDSC,\n\t\tDNUMLOT = UserWritten1@DNUMLOT,\n\t\tAIDNAUD = UserWritten1@AIDNAUD,\n\t\tDDEBSIT = UserWritten1@DDEBSIT,\n\t\tDFINSIT = UserWritten1@DFINSIT,\n\t\tBSITCOU = UserWritten1@BSITCOU,\n\t\tSIDNLIBSTCCOD,\n\t\tCPRD = UserWritten1@CPRD,\n\t\tLPRDNDL,\n\t\tLPRDFRA,\n\t\tLPRDANG\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select3\nSurrogateKey1 derive(AIDNAUD = $aidn,\n\t\tSIDNFIOCFMPRD = {_SIDN}) ~> DerivedColumn1\nSelect1 keyGenerate(output({_SIDN} as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSelect2 sink(input(\n\t\tSIDNFIOCFMPRD as string,\n\t\tCPRD as string,\n\t\tLPRDNDL as string,\n\t\tLPRDFRA as string,\n\t\tLPRDANG as string,\n\t\tCUNV as string,\n\t\tLUNVNDL as string,\n\t\tLUNVFRA as string,\n\t\tLUNVANG as string,\n\t\tBPAC as string,\n\t\tDNUMLOT as string,\n\t\tAIDNAUD as string,\n\t\tDDEBSIT as string,\n\t\tDFINSIT as string,\n\t\tBSITCOU as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TBYDMADFIOCFMPRD.csv'],\n\tmapColumn(\n\t\tSIDNFIOCFMPRD,\n\t\tCPRD,\n\t\tLPRDNDL,\n\t\tLPRDFRA,\n\t\tLPRDANG,\n\t\tCUNV,\n\t\tLUNVNDL,\n\t\tLUNVFRA,\n\t\tLUNVANG,\n\t\tBPAC,\n\t\tDNUMLOT,\n\t\tAIDNAUD,\n\t\tDDEBSIT,\n\t\tDFINSIT,\n\t\tBSITCOU\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> TBYDMADFIOCFMPRD"
+        }
+    }
+}
