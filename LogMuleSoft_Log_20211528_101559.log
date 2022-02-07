@@ -1,0 +1,44 @@
+
+#############################################################
+################ MULESOFT Reverse Engineer Log ###############
+#############################################################
+
+ProjecName  : 000-SNHU-Payload28
+
+
+=============================================================================================================
+
+********************************************
+MAPPING LOG
+********************************************
+
+
+Mule Soft Report : D:\SampleFiles\SNHUMuleSamples\lms-unify-bulk\lms-unify-bulk\src
+
+MAP : lms-unify-mapping-ethos-calls
+Mapping created successfully
+MAP : lms-unify-bulk-close-job
+Mapping created successfully
+MAP : lms-unify-bulk-process
+Mapping created successfully
+MAP : lms-unify-bulk-cc-job-process
+Mapping created successfully
+MAP : lms-unify-mapping-assignment-process
+Mapping created successfully
+MAP : lms-unify-mapping-process
+Mapping created successfully
+MAP : lms-unify-bulk-db-calls
+Mapping created successfully
+MAP : lms-unify-bulk-update-db-status-calls
+Mapping created successfully
+MAP : lms-unify-mapping-db-calls
+Mapping created successfully
+MAP : lms-unify-mapping-salesforce-calls
+Mapping created successfully
+MAP : lms-unify-bulk-common
+Mapping created successfully
+MAP : lms-unify-status-operations-process@D:\SampleFiles\SNHUMuleSamples\lms-unify-bulk\lms-unify-bulk\src\main\app\lms-unify-status-operations-process.xml
+Mapping created successfully
+********************************************
+EXCEPTION LOG
+********************************************
