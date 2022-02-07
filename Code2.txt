@@ -1,0 +1,87 @@
+import java.io.File;
+import java.util.*;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class FileReader100 {
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		String name="";
+		String extension=".txt";
+		Map<String,String> hash_map_main= new HashMap<String,String>();
+		//List<File> filelist = new ArrayList<File>();
+		File[] fileArray=new File("/C:/Users/SGandham/Desktop/Files").listFiles(); 
+		for(File f: fileArray) 
+		{
+			if(f.isFile()) 
+			{   
+				if(f.getName().endsWith(extension)){
+					hash_map_main=getFileName(f.getAbsolutePath(),extension);
+					System.out.println(hash_map_main.get("filename")+" "+hash_map_main.get("extension"));
+				}
+				else{
+					System.out.print("");
+				}
+			}
+		    else if(f.isDirectory()){
+				
+				File arr[] = f.listFiles();
+				GetFilesFromDir(arr,extension);
+			}
+		}
+
+
+	} 
+	
+	static void GetFilesFromDir(File[] arr, String ext) throws FileNotFoundException 
+    {
+		Map<String,String> hash_map= new HashMap<String,String>();
+		
+        for (File f : arr) 
+		{
+            if (f.isFile()){
+				if(f.getName().endsWith(ext)){
+					hash_map=getFileName(f.getAbsolutePath(),ext);
+					System.out.println(hash_map.get("filename")+" "+hash_map.get("extension"));
+				}
+				else{
+					System.out.print("");
+				}
+			}
+            else if (f.isDirectory()) {
+                GetFilesFromDir(f.listFiles(),ext); 
+            }
+        }
+		
+    }
+	
+	public static Map<String,String> getFileName(String filename,String extension) throws FileNotFoundException 
+	{
+		Map<String,String> hash_map= new HashMap<String,String>();
+		File f=new File(filename);
+		String fname="";
+		boolean flag=false;
+		Scanner sc=new Scanner(f);
+		while(sc.hasNextLine()) {
+			String line = sc.nextLine();
+			if(line.contains("SUFFIX=SQLORA"))
+			{
+				flag=true;
+				break;
+			}
+
+		}
+		if(flag) {
+			hash_map.put("filename",f.getName().replace(extension, ""));
+			hash_map.put("extension",extension);
+		}
+		else {
+			hash_map.put("filename",null);
+			hash_map.put("extension",null);
+		}
+		return hash_map;
+
+	}
+
+
+}
